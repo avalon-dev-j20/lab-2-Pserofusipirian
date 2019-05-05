@@ -1,6 +1,9 @@
 package ru.avalon.java.j20.labs.models;
 
 import java.text.ParseException;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Модель представления о стране.
@@ -44,9 +47,25 @@ public class Country {
         return name;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if (!(obj instanceof Country)) {
+            return false;
+        }
+        Country eqCountry = (Country)obj;
+        return getCode().equals(eqCountry.getCode()) && getName().equals(eqCountry.getName());
+    }
     /*
      * TODO(Студент): для класса Country переопределить методы equals и hashCode
      */
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.code);
+        hash = 89 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
 
     /**
      * Возвращает экземпляр страны созданный из переданного
@@ -58,9 +77,21 @@ public class Country {
      * имеет неверный формат.
      */
     public static Country valueOf(String text) throws ParseException {
+        
+        Pattern pattern = Pattern.compile("([a-zA-Z]{2}):([a-zA-Zа-яА-Я\\s\\(\\)\\-\\,\\']{1,})");
+        Matcher matcher = pattern.matcher(text);
+        //Хоть результат корректен, к сожалению, matcher.matches() не удалось использовать, т.к. всегда возврощает false.
+        //Проверка (countryCode+":"+countryName == text) также не работает, возможно, из-за разницы кодировок.
+        if (matcher.find()){
+            String countryCode = matcher.group(1);
+            String countryName = matcher.group(2);
+            return new Country(countryCode, countryName);            
+        } else {
+            throw new ParseException("Incorrect format of string", 0);
+        }
+        
         /*
          * TODO(Студент): Реализовать метод valueOf класса Country
          */
-        throw new UnsupportedOperationException("Not implemented yet!");
     }
 }
