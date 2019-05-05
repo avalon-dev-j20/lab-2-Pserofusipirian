@@ -18,6 +18,18 @@ public class Task5 implements Task {
      */
     @Override
     public void run() throws IOException {
+        
+        //На случай, если по дефолту стоит русская, временная замена на английскую
+        Locale localeDef = Locale.getDefault();        
+        Locale.setDefault(Locale.ENGLISH);
+        
+        Locale localeRu = new Locale("ru");
+        ResourceBundle resourceBundleEn = read("resources.strings.titles");
+        ResourceBundle resourceBundleRu = read("resources.strings.titles", localeRu);
+        
+        //Возвращение исходных настроек
+        Locale.setDefault(localeDef);
+        
         /*
          * TODO(Студент): Выполнить задание №5
          *
@@ -40,8 +52,8 @@ public class Task5 implements Task {
      * @param path путь к файлу ресурсов
      * @return новый экземпляр типа {@link ResourceBundle}
      */
-    private ResourceBundle read(String path) {
-        throw new UnsupportedOperationException("Not implement yet!");
+    private ResourceBundle read(String path) {        
+        return ResourceBundle.getBundle(path);
     }
 
     /**
@@ -51,6 +63,6 @@ public class Task5 implements Task {
      * @return новый экземпляр типа {@link ResourceBundle}
      */
     private ResourceBundle read(String path, Locale locale) {
-        throw new UnsupportedOperationException("Not implement yet!");
+        return ResourceBundle.getBundle(path, locale);
     }
 }
